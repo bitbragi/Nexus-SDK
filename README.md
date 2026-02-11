@@ -1,214 +1,121 @@
-# 🎯 Nexus On-Chain Wallet - Developed by Switch-900 
-## visit https://ordinals.com/content/7cf63b82b244d41121ef823a6532705cd25257d7420a405daa388394de5b529ei0 
+# Nexus Onchain Wallet Connect
 
-A fully on-chain Bitcoin wallet connector supporting 8 major Bitcoin wallets, deployed entirely as Bitcoin inscriptions.
+**Developed by [Switch-900](https://github.com/switch-900/nexus-ocw)**
 
-For the best wallet connect for off chain apps use https://www.lasereyes.build/ 
+A universal Bitcoin wallet connector supporting 8 major wallets with a single `signPsbt()` interface. Deployed entirely as Bitcoin inscriptions -- immutable, decentralized, zero dependencies. Also works as a local library for bundler-based projects.
 
-## � Live Inscriptions
+**[Live on Bitcoin](https://ordinals.com/content/7cf63b82b244d41121ef823a6532705cd25257d7420a405daa388394de5b529ei0)** | **Used in production by [MyTXO](https://mytxo.space)**
 
-### Core Library Inscriptions (Deployed)
-All wallet provider modules are inscribed on Bitcoin and loaded dynamically:
+---
 
-| Module | SAT Number | Inscription ID |
-|--------|-----------|----------------|
-| **Base Provider** | `1408319431385218` | Core wallet interface |
-| **Normalizers** | `1408319431385764` | Data formatting utilities |
-| **Wallet Connector** | `1180016128405661` | Connection management |
-| **UniSat Provider** | `1180016128407426` | UniSat wallet support |
-| **Xverse Provider** | `1180016128407972` | Xverse wallet support |
-| **OKX Provider** | `1180016128408518` | OKX wallet support |
-| **Leather Provider** | `1180016128409064` | Leather (Stacks) wallet support |
-| **Phantom Provider** | `1180016128409610` | Phantom wallet support |
-| **Wizz Provider** | `1180016128410156` | Wizz wallet support |
-| **Magic Eden Provider** | `1180016128410702` | Magic Eden wallet support |
-| **Oyl Provider** | `1180016128411248` | Oyl wallet support |
+## Why Nexus?
 
-### Application Inscriptions (Deployed)
-The complete React application is deployed as modular inscriptions for independent updates:
+- **One interface, 8 wallets** -- `signPsbt()`, `sendBitcoin()`, `signMessage()`, and 60+ more methods work identically across UniSat, Xverse, OKX, Leather, Phantom, Wizz, Magic Eden, and Oyl
+- **On-chain first** -- The entire library lives as Bitcoin inscriptions. Load it from a SAT reference -- no npm, no CDN, no servers
+- **Local-ready** -- Copy the provider files into your project and import directly. No build chain dependency
+- **Modular architecture** -- Each wallet provider is a separate inscription, updatable independently
+- **Normalized data** -- Consistent response formats regardless of which wallet is connected
 
-| Component | SAT Number | Description |
-|-----------|-----------|-------------|
-| **Wallet Loader** | `650232570297610` | Main library loader (12-loader.js) |
-| **App Styles** | `650232570299189` | CSS styles (22.71 KB) |
-| **Main App** | `650232570299735` | React application bundle (105.97 KB) |
-| **HTML Entry** | https://ordinals.com/content/7cf63b82b244d41121ef823a6532705cd25257d7420a405daa388394de5b529ei0 |
+## Supported Wallets
 
-### How It Works
+UniSat | Xverse | OKX | Leather | Phantom | Wizz | Magic Eden | Oyl
+
+---
+
+## Two Ways to Use
+
+### Option A: Load from Bitcoin (On-Chain)
+
+Load the library directly from its Bitcoin inscription. No install, no build process.
+
+```html
+<script type="module">
+  import NWC from '/r/sat/650232570297610/at/-1/content';
+  window.NexusWalletConnect = NWC;
+</script>
+```
+
+### Option B: Local / Bundler
+
+Copy the provider files into your project and import them directly. This is how [MyTXO](https://mytxo.space) uses Nexus in production.
+
+```
+your-project/
+  lib/wallet/nexus/
+    loader.js              # Main SDK orchestrator
+    providers/
+      01-base-provider.js
+      02-normalizers.js
+      03-wallet-connector.js
+      04-unisat-provider.js
+      ... (04-11 wallet providers)
+```
+
 ```javascript
-// All providers are loaded from Bitcoin inscriptions
-import { BaseWalletProvider } from '/r/sat/1408319431385218/at/-1/content';
-import { UniSatProvider } from '/r/sat/1180016128407426/at/-1/content';
-import { XverseProvider } from '/r/sat/1180016128407972/at/-1/content';
-// ... 8 wallet providers total
-
-// The loader combines everything and exposes window.NexusWalletConnect
-// Your app imports from the inscription, not from npm!
+import NWC from './lib/wallet/nexus/loader.js';
 ```
 
-**Benefits of Inscription Architecture:**
-- ✅ **Immutable**: Code can never be changed or taken down
-- ✅ **Decentralized**: No servers, CDNs, or dependencies
-- ✅ **Modular**: Update individual components without re-inscribing everything
-- ✅ **Compressed**: Brotli compression saves ~85% space on-chain
-- ✅ **Permanent**: Lives on Bitcoin blockchain forever
+Both paths expose the same `NexusWalletConnect` API.
 
 ---
 
-## 📁 Workspace Structure
+## Quick Start
 
-```
-nexus-ocw/
-├── 📁 inscriptions local/           [11 source files]
-│   ├── 01-base-provider.js
-│   ├── 02-normalizers.js
-│   ├── 03-wallet-connector.js
-│   ├── 04-unisat-provider.js
-│   ├── 05-xverse-provider.js
-│   ├── 06-okx-provider.js
-│   ├── 07-leather-provider.js
-│   ├── 08-phantom-provider.js
-│   ├── 09-wizz-provider.js
-│   ├── 10-magiceden-provider.js
-│   └── 11-oyl-provider.js
-│
-├── 📁 frontend/                     [React Application]
-│   ├── index.dev.html               (Development)
-│   ├── index.html                   (Production)
-│   ├── App.jsx                      (Main component)
-│   ├── main.jsx                     (Entry point)
-│   ├── vite.config.js               (Frontend config)
-│   │
-│   ├── 📁 components/
-│   │   ├── dev-loader-simple.js     ⭐ LOADER SOURCE
-│   │   ├── InscriptionCreator.jsx
-│   │   ├── InscriptionItem.jsx
-│   │   ├── WalletTester.jsx
-│   │   ├── XversePanel.jsx
-│   │   └── walletCapabilities.js
-│   │
-│   └── 📁 styles/
-│       ├── App.css
-│       ├── InscriptionItem.css
-│       └── XversePanel.css
-│
-├── 📄 prepare-inscriptions.js       ⭐ Main inscription prep script
-├── 📄 fix-local-imports.js          (Helper script)
-├── 📄 vite.config.js                (Main Vite config)
-├── 📄 package.json                  (Dependencies)
-└── 📄 package-lock.json             (Lock file)
-```
+```javascript
+const NWC = window.NexusWalletConnect; // or import from local
 
-**Total**: 30 essential files (no bloat!) ⭐ **NEW**: Enhanced with utility functions & comprehensive testing
+// 1. Detect installed wallets
+const wallets = NWC.detectWallets();
+console.log('Available:', wallets.map(w => w.name));
 
----
+// 2. Connect
+await NWC.connect('UniSat');
+const state = NWC.getState();
+console.log(state.address, state.balance, 'BTC');
 
-## 🚀 Quick Start
+// 3. Sign a PSBT
+const signed = await NWC.signPsbt(psbtHex);
+const txId = await NWC.pushPsbt(signed);
 
-### Development
-```bash
-# Install dependencies (first time only)
-npm install
-
-# Start dev server
-npm run dev
-
-# Open browser to: http://localhost:5173
-```
-
-### Prepare for Inscription
-```bash
-# Generate inscription-ready files
-npm run prepare-inscriptions
-
-# Output: ready-to-inscribe/
-# - regular/ (readable files)
-# - minified/ (44% smaller)
-# - compressed/ (91% smaller!)
+// 4. Disconnect
+await NWC.disconnect();
 ```
 
 ---
 
-## 🔑 Key Concepts
+## Wallet Compatibility Matrix
 
-### Source Files (Edit These)
-- `frontend/components/dev-loader-simple.js` → Loader source
-- `inscriptions local/01-11` → Provider sources
-
-### Generated Files (Don't Edit)
-- `ready-to-inscribe/12-loader.js` → Generated from dev-loader-simple.js
-- `ready-to-inscribe/01-11` → Generated from inscriptions local/
-- `ready-to-inscribe/minified/*` → Optimized versions
-- `ready-to-inscribe/compressed/*` → Brotli compressed
-
----
-
-## 📝 Workflow
-
-### 1. Daily Development
-```bash
-# Edit source files
-vim frontend/components/dev-loader-simple.js
-vim "inscriptions local/04-unisat-provider.js"
-
-# Test changes
-npm run dev
-```
-
-### 2. Prepare for Inscription
-```bash
-# Generate all inscription files
-npm run prepare-inscriptions
-
-# Script does:
-# ✅ Reads dev-loader-simple.js
-# ✅ Converts relative imports → SAT references
-# ✅ Generates 12-loader.js
-# ✅ Creates 3 versions: regular, minified, compressed
-# ✅ No ordinals.com (just /r/sat/XXX/at/-1/content)
-```
-
-### 3. Inscription Process
-1. **Phase 1**: Inscribe core (01-03)
-2. **Phase 2**: Update SAT numbers, re-run script, inscribe providers (04-11)
-3. **Phase 3**: Update SAT numbers, re-run script, inscribe loader (12)
-4. **Phase 4**: Deploy frontend bundle
-
----
-
-## 🔌 Wallet Compatibility Matrix
-
-### Supported Wallets & Core Capabilities
+### Core Capabilities
 
 | Wallet | Balance | Inscriptions | Sign PSBT | Send BTC | Sign Message | Push PSBT | Get Public Key | Create Inscription |
 |--------|---------|--------------|-----------|----------|--------------|-----------|----------------|-------------------|
-| **UniSat** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
-| **Xverse** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ |
-| **OKX** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Leather** | ❌ | ❌ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| **Phantom** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
-| **Wizz** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Oyl** | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| **Magic Eden** | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| **UniSat** | Yes | Yes | Yes | Yes | Yes | Yes | Yes | -- |
+| **Xverse** | Yes | Yes | Yes | Yes | Yes | -- | Yes | Yes |
+| **OKX** | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Leather** | -- | -- | Yes | Yes | Yes | Yes | -- | -- |
+| **Phantom** | Yes | Yes | Yes | Yes | Yes | -- | Yes | -- |
+| **Wizz** | Yes | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Oyl** | Yes | Yes | Yes | Yes | Yes | -- | -- | -- |
+| **Magic Eden** | -- | -- | Yes | Yes | Yes | -- | -- | -- |
 
-### Advanced Features by Wallet
+### Advanced Features
 
 | Feature | UniSat | Xverse | OKX | Leather | Phantom | Wizz | Oyl | Magic Eden |
 |---------|--------|--------|-----|---------|---------|------|-----|------------|
-| **Runes Support** | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **BRC-20 Tokens** | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Stacks Support** | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **Multi-Address** | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Batch Operations** | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Hardware Wallet** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **NFT Support** | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| **UTXO Access** | ✅ | ❌ | ⚠️ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Capabilities API** | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **BRC-20 Listing** | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Runes Support** | -- | Yes | -- | -- | -- | Yes | -- | -- |
+| **BRC-20 Tokens** | Yes | -- | Yes | -- | -- | Yes | -- | -- |
+| **Stacks Support** | -- | -- | -- | Yes | -- | -- | -- | -- |
+| **Multi-Address** | -- | Yes | -- | -- | -- | -- | -- | -- |
+| **Batch Operations** | -- | Yes | -- | -- | -- | -- | -- | Yes |
+| **Hardware Wallet** | -- | -- | -- | -- | -- | -- | -- | Yes |
+| **NFT Support** | Yes | Yes | Yes | -- | Yes | Yes | Yes | Yes |
+| **UTXO Access** | Yes | -- | Partial | -- | -- | Yes | -- | -- |
+| **Capabilities API** | -- | Yes | -- | -- | -- | -- | -- | -- |
+| **BRC-20 Listing** | Yes | -- | Yes | -- | -- | -- | -- | -- |
 
 ---
 
-## 📚 NexusWalletConnect API Reference
+## API Reference
 
 ### Core Connection Functions
 
@@ -237,7 +144,7 @@ npm run prepare-inscriptions
 | `getAddress()` | Get current address | `Promise<string>` | Primary wallet address |
 | `getPublicKey()` | Get public key | `Promise<string>` | If supported by wallet |
 | `getAccounts()` | Get all accounts | `Promise<Array>` | Multi-account wallets |
-| `getNetwork()` | Get current network | `Promise<string>` | 'mainnet', 'testnet', etc. |
+| `getNetwork()` | Get current network | `Promise<string>` | `'mainnet'`, `'testnet'`, etc. |
 | `switchNetwork(network)` | Switch networks | `Promise<void>` | If supported |
 
 ### Transaction Operations
@@ -276,7 +183,7 @@ npm run prepare-inscriptions
 | `getRunesOrder(orderId)` | Check Runes order status | `Promise<Object>` | Order tracking |
 | `signMultipleTransactions(psbts)` | Sign multiple transactions | `Promise<Array>` | Batch operations |
 
-### Leather-Specific Functions (Stacks Wallet)
+### Leather-Specific Functions (Stacks)
 
 | Function | Description | Returns | Notes |
 |----------|-------------|---------|-------|
@@ -325,187 +232,156 @@ npm run prepare-inscriptions
 
 ---
 
-## 🎯 Frontend Features
+## On-Chain Inscription Architecture
 
-### Enhanced Wallet Testing
-- **🧪 Complete Method Testing**: Test all 60+ wallet methods across 8 wallets
-- **📊 Capability Matrix**: Interactive comparison of wallet features
-- **💻 Code Snippets**: Copy-paste ready code for all functions
-- **🔍 Comprehensive Reports**: Downloadable test reports in Markdown format
+The entire Nexus SDK is deployed as modular Bitcoin inscriptions. Each wallet provider is its own inscription, allowing independent updates without re-inscribing the whole library.
 
-### Advanced UI Components
-- **🪙 BRC-20 Token Management**: View and transfer BRC-20 tokens
-- **📦 UTXO Visualization**: Inspect unspent outputs (UniSat/Wizz)
-- **🔧 Utility Functions**: Access to `getCapabilities()`, `getUtxos()`, `getBRC20List()`
-- **🎨 Dark/Light Mode**: Professional responsive design
+### Core Library Inscriptions
 
-### Real-time Features
-- **⚡ Live Balance Updates**: Auto-refresh on wallet connection
-- **🔄 State Management**: React-based reactive state updates
-- **📱 Mobile Responsive**: Works on all devices
-- **⚠️ Error Handling**: User-friendly error messages and validation
+| Module | SAT Number | Description |
+|--------|-----------|-------------|
+| **Base Provider** | `1408319431385218` | Core wallet interface |
+| **Normalizers** | `1408319431385764` | Data formatting utilities |
+| **Wallet Connector** | `1180016128405661` | Connection management |
+| **UniSat Provider** | `1180016128407426` | UniSat wallet support |
+| **Xverse Provider** | `1180016128407972` | Xverse wallet support |
+| **OKX Provider** | `1180016128408518` | OKX wallet support |
+| **Leather Provider** | `1180016128409064` | Leather (Stacks) wallet support |
+| **Phantom Provider** | `1180016128409610` | Phantom wallet support |
+| **Wizz Provider** | `1180016128410156` | Wizz wallet support |
+| **Magic Eden Provider** | `1180016128410702` | Magic Eden wallet support |
+| **Oyl Provider** | `1180016128411248` | Oyl wallet support |
+
+### Application Inscriptions
+
+| Component | SAT Number | Description |
+|-----------|-----------|-------------|
+| **Wallet Loader** | `650232570297610` | Main library loader (12-loader.js) |
+| **App Styles** | `650232570299189` | CSS styles (22.71 KB) |
+| **Main App** | `650232570299735` | React application bundle (105.97 KB) |
+| **HTML Entry** | [View on Ordinals](https://ordinals.com/content/7cf63b82b244d41121ef823a6532705cd25257d7420a405daa388394de5b529ei0) | Entry point |
+
+### How On-Chain Loading Works
+
+```javascript
+// Providers load from Bitcoin SAT references
+import { BaseWalletProvider } from '/r/sat/1408319431385218/at/-1/content';
+import { UniSatProvider } from '/r/sat/1180016128407426/at/-1/content';
+import { XverseProvider } from '/r/sat/1180016128407972/at/-1/content';
+// ... 8 wallet providers total
+
+// The loader combines everything and exposes window.NexusWalletConnect
+```
+
+**Why inscriptions?**
+
+- **Immutable** -- Code can never be changed or taken down
+- **Decentralized** -- No servers, CDNs, or dependencies
+- **Modular** -- Update individual providers without re-inscribing everything
+- **Compressed** -- Brotli compression saves ~85% on-chain space
+- **Permanent** -- Lives on Bitcoin forever
+
+### Inscription Deployment Order
+
+1. Inscribe core modules (01-03)
+2. Update SAT numbers in code, re-run build, inscribe wallet providers (04-11)
+3. Update SAT numbers, re-run build, inscribe loader (12)
+4. Deploy frontend bundle
 
 ---
 
-## 🚀 Usage Examples
+## Project Structure
 
-### Quick Start: Load from Inscription
-
-Add the Nexus OCW library to your HTML page directly from Bitcoin:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>My Bitcoin App</title>
-  
-  <!-- Load Nexus Wallet Connect from inscription -->
-  <script type="module">
-    import NWC from '/r/sat/650232570297610/at/-1/content';
-    window.NexusWalletConnect = NWC;
-    console.log('✅ NexusWalletConnect loaded from inscription');
-  </script>
-</head>
-<body>
-  <button onclick="connectWallet()">Connect Wallet</button>
-  
-  <script>
-    async function connectWallet() {
-      // Access the library from window object
-      const NWC = window.NexusWalletConnect;
-      
-      // Detect available wallets
-      const wallets = NWC.detectWallets();
-      console.log('Available wallets:', wallets);
-      
-      // Connect to UniSat (or any supported wallet)
-      try {
-        await NWC.connect('UniSat');
-        const state = NWC.getState();
-        console.log('Connected!', state);
-        
-        // Get balance
-        const balance = await NWC.getBalance();
-        alert(`Balance: ${balance} BTC`);
-      } catch (error) {
-        console.error('Connection failed:', error);
-      }
-    }
-  </script>
-</body>
-</html>
+```
+nexus-ocw/
+├── inscriptions local/           # Source provider files (11 modules)
+│   ├── 01-base-provider.js
+│   ├── 02-normalizers.js
+│   ├── 03-wallet-connector.js
+│   ├── 04-unisat-provider.js
+│   ├── 05-xverse-provider.js
+│   ├── 06-okx-provider.js
+│   ├── 07-leather-provider.js
+│   ├── 08-phantom-provider.js
+│   ├── 09-wizz-provider.js
+│   ├── 10-magiceden-provider.js
+│   └── 11-oyl-provider.js
+│
+├── frontend/                     # React testing application
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── components/
+│   │   ├── dev-loader-simple.js  # Loader source (generates 12-loader.js)
+│   │   ├── WalletTester.jsx
+│   │   ├── XversePanel.jsx
+│   │   └── walletCapabilities.js
+│   └── styles/
+│
+├── prepare-inscriptions.js       # Generates inscription-ready files
+├── fix-local-imports.js
+├── vite.config.js
+└── package.json
 ```
 
-**That's it!** No npm install, no build process, no dependencies. Just load from inscription and use.
+**Source files** (edit these): `inscriptions local/01-11` and `frontend/components/dev-loader-simple.js`
+
+**Generated files** (don't edit): Everything in `ready-to-inscribe/` -- regular, minified, and Brotli-compressed versions.
 
 ---
 
-### Basic Connection
-```javascript
-// Access NexusWalletConnect from window (already loaded via inscription)
-const NWC = window.NexusWalletConnect;
+## Development
 
-// Detect installed wallets
-const wallets = NWC.detectWallets();
-console.log('Available wallets:', wallets);
+### Setup
 
-// Connect to a wallet
-const provider = await NWC.connect('UniSat');
-console.log('Connected:', NWC.getState());
+```bash
+# Install dependencies
+npm install
 
-// Get balance
-const balance = await NWC.getBalance();
-console.log('Balance:', balance, 'BTC');
+# Start dev server
+npm run dev
+# Open http://localhost:5173
 ```
 
-### Advanced Features
-```javascript
-const NWC = window.NexusWalletConnect;
-
-// Xverse multi-address
-const state = NWC.getState();
-if (state.walletType === 'Xverse') {
-  const addresses = await NWC.getAddresses(['payment', 'ordinals']);
-  console.log('Payment address:', addresses.find(a => a.purpose === 'payment').address);
-}
-
-// Get inscriptions with pagination
-const inscriptions = await NWC.getInscriptions(0, 20);
-console.log('First 20 inscriptions:', inscriptions);
-
-// Sign and broadcast PSBT
-const signedPsbt = await NWC.signPsbt(psbtHex);
-const txId = await NWC.pushPsbt(signedPsbt);
-console.log('Transaction ID:', txId);
-```
-
-### New Utility Functions
-```javascript
-const NWC = window.NexusWalletConnect;
-
-// Get wallet capabilities
-const capabilities = await NWC.getCapabilities();
-console.log('Wallet features:', capabilities);
-
-// Get UTXOs (unspent transaction outputs) - UniSat/Wizz only
-const utxos = await NWC.getUtxos();
-console.log('Available UTXOs:', utxos);
-
-// Get BRC-20 token holdings
-const brc20s = await NWC.getBRC20List();
-console.log('BRC-20 tokens:', brc20s);
-
-// Usage with OKX/UniSat for BRC-20 transfers
-const state = NWC.getState();
-if (state.walletType === 'OKX' || state.walletType === 'UniSat') {
-  const transferResult = await NWC.inscribeTransfer('ordi', '100');
-  console.log('BRC-20 transfer inscription:', transferResult);
-}
-```
-
----
-
-## 🛠️ Available Scripts
+### Available Scripts
 
 ```bash
 npm run dev                    # Development server
 npm run build                  # Build production frontend
 npm run build:core             # Build core library for inscription
 npm run preview                # Preview built frontend
-npm run prepare-inscriptions   # Generate inscription files
+npm run prepare-inscriptions   # Generate inscription-ready files
 npm run fix-local-imports      # Fix import paths (if needed)
 ```
 
----
+### Preparing Inscriptions
 
-## ✅ What Was Cleaned
+```bash
+npm run prepare-inscriptions
 
-### Package.json Scripts
-- ✅ Cleaned up to 6 essential scripts only
-- ✅ Removed hardcoded Linux Node.js paths  
-- ✅ Removed 14+ outdated/broken script variants
-- ✅ Updated main entry point to `frontend/main.jsx`
-- ✅ All scripts now use standard `vite` commands
+# Generates ready-to-inscribe/ with:
+#   regular/    -- readable source files
+#   minified/   -- optimized (44% smaller)
+#   compressed/ -- Brotli compressed (91% smaller)
+```
 
+For detailed inscription guides, check the generated files:
+- `ready-to-inscribe/INSCRIPTION_GUIDE.md`
+- `ready-to-inscribe/MANIFEST.json`
 
-## 📚 Documentation
+### Important
 
-All workflows are documented in this README.
-
-For more details about the inscription process:
-- Run `npm run prepare-inscriptions`
-- Check `ready-to-inscribe/INSCRIPTION_GUIDE.md` (generated)
-- Review `ready-to-inscribe/MANIFEST.json` (generated)
-
----
-
-## 🚨 Important Notes
-
-1. **Never edit generated files** in `ready-to-inscribe/`
-2. **Always edit source files**:
-   - `frontend/components/dev-loader-simple.js` (loader)
-   - `inscriptions local/01-11` (providers)
-3. **Regenerate when needed**: Just run `npm run prepare-inscriptions`
-4. **No ordinals.com domain**: Uses `/r/sat/XXX/at/-1/content`
+1. Never edit generated files in `ready-to-inscribe/`
+2. Always edit source files in `inscriptions local/` and `frontend/components/`
+3. SAT references use `/r/sat/XXX/at/-1/content` (not ordinals.com URLs)
 
 ---
+
+## Credits
+
+Built by **[Switch-900](https://github.com/switch-900/nexus-ocw)**.
+
+For off-chain web apps that don't need inscription-level permanence, also check out [Laser Eyes](https://www.lasereyes.build/).
+
+---
+
+**Permanent. Decentralized. On Bitcoin.**
