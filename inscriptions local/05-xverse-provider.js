@@ -364,6 +364,14 @@ export class XverseProvider extends BaseWalletProvider {
     }
   }
 
+  // Bridge: the loader and NexusAdapter call signPsbt (camelCase),
+  // but XverseProvider implements signPSBT (uppercase).
+  // Without this bridge, calls fall through to BaseWalletProvider.signPsbt()
+  // which tries this.walletInstance.signPsbt() — not available on Xverse.
+  async signPsbt(psbtHex, options = {}) {
+    return this.signPSBT(psbtHex, options);
+  }
+
 
   async sendBitcoin(toAddress, amount) {
     this.requireConnected();
