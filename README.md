@@ -4,7 +4,7 @@
 
 A universal Bitcoin wallet connector supporting 8 major wallets with a single `signPsbt()` interface. Deployed entirely as Bitcoin inscriptions -- immutable, decentralized, zero dependencies. Also works as a local library for bundler-based projects.
 
-**[Live on Bitcoin](https://ordinals.com/content/7cf63b82b244d41121ef823a6532705cd25257d7420a405daa388394de5b529ei0)** | **Used in production by [MyTXO](https://mytxo.space)**
+**[Live on Bitcoin](https://ordinals.com/content/7cf63b82b244d41121ef823a6532705cd25257d7420a405daa388394de5b529ei0)** | **Used in production by MyTXO**
 
 ---
 
